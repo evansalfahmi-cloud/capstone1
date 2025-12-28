@@ -1,14 +1,16 @@
-/* ================================
-   Bootstrap (HARUS PALING ATAS)
-   ================================ */
+/* ======================================================
+   BOOTSTRAP (WAJIB PALING ATAS)
+   ====================================================== */
 
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-/* ================================
-   San Francisco Pro Display
-   ================================ */
 
+/* ======================================================
+   SF PRO DISPLAY (SELF-HOSTED FONT)
+   ====================================================== */
+
+/* Regular */
 @font-face {
     font-family: 'SF Pro Display';
     src: url('/fonts/SF-Pro-Display-Regular.woff2') format('woff2');
@@ -17,6 +19,7 @@
     font-display: swap;
 }
 
+/* Medium */
 @font-face {
     font-family: 'SF Pro Display';
     src: url('/fonts/SF-Pro-Display-Medium.woff2') format('woff2');
@@ -25,6 +28,7 @@
     font-display: swap;
 }
 
+/* Bold */
 @font-face {
     font-family: 'SF Pro Display';
     src: url('/fonts/SF-Pro-Display-Bold.woff2') format('woff2');
@@ -33,39 +37,76 @@
     font-display: swap;
 }
 
-/* ================================
-   Global Font
-   ================================ */
 
+/* ======================================================
+   FORCE GLOBAL FONT (OVERRIDE BOOTSTRAP)
+   ====================================================== */
+
+/* Override variabel font Bootstrap */
+:root {
+    --bs-font-sans-serif: 'SF Pro Display',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        'Helvetica Neue',
+        Arial,
+        sans-serif;
+}
+
+/* Paksa seluruh halaman memakai SF Pro Display */
 html,
 body {
     height: 100%;
     margin: 0;
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        'Helvetica Neue',
+        Arial,
+        sans-serif !important;
 }
 
-/* ================================
-   Background Image (FULL SCREEN)
-================================ */
+/* Pastikan semua elemen turunan ikut */
+* {
+    font-family: inherit;
+}
+
+
+/* ======================================================
+   BODY BASE STYLE
+   ====================================================== */
 
 body {
     position: relative;
     min-height: 100vh;
-    background-color: #f8f9fa; /* fallback */
+    background-color: #f8f9fa; /* fallback jika gambar gagal */
 }
 
-/* ================================
-   Background Image with OPACITY 0.08
-================================ */
+
+/* ======================================================
+   BACKGROUND IMAGE (FULL SCREEN + OPACITY)
+   ====================================================== */
 
 body::before {
     content: '';
     position: fixed;
     inset: 0;
+
+    /* Background image */
     background-image: url('/img/bg.png');
-    background-size: cover;          /* satu gambar penuh */
-    background-position: center;     /* selalu tengah */
-    background-repeat: no-repeat;    /* TIDAK diulang */
-    opacity: 0.1;                   /* SESUAI PERMINTAAN */
+    background-size: cover;       /* satu gambar memenuhi layar */
+    background-position: center;  /* selalu di tengah */
+    background-repeat: no-repeat; /* tidak diulang */
+
+    /* Opacity sesuai permintaan */
+    opacity: 0.08;
+
+    /* Layer di belakang semua konten */
     z-index: -1;
+    pointer-events: none;
 }
