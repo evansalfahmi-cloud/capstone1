@@ -2,61 +2,77 @@
 // Tag pembuka PHP
 
 use Illuminate\Support\Facades\Route;
-// Mengimpor facade Route untuk mendefinisikan routing
+// Facade Route untuk mendefinisikan routing
 
 use App\Http\Controllers\Auth\LoginController;
-// Mengimpor LoginController yang kita buat di folder Auth
+// Controller untuk login & logout
+
+use App\Http\Controllers\Auth\RegisterController;
+// Controller untuk proses pendaftaran user
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-| File ini berisi semua routing untuk aplikasi web
-| Route menentukan URL mana memanggil controller / view tertentu
+| File ini berisi seluruh routing aplikasi web
+| Setiap route menentukan URL → controller / view
 */
 
-// ==============================
-// ROUTE ROOT
-// ==============================
+/*
+|--------------------------------------------------------------------------
+| ROOT
+|--------------------------------------------------------------------------
+*/
 
-// Jika user mengakses root domain (/),
+// Jika user mengakses root (/)
 // langsung diarahkan ke halaman login
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// ==============================
-// ROUTE LOGIN
-// ==============================
+/*
+|--------------------------------------------------------------------------
+| AUTH - LOGIN
+|--------------------------------------------------------------------------
+*/
 
-// Menampilkan halaman login
-// Method GET → hanya menampilkan form
+// Menampilkan halaman login (GET)
 Route::get('/login', [LoginController::class, 'show'])
     ->name('login');
 
-// Memproses data login
-// Method POST → menerima username & password dari form
+// Memproses login (POST)
 Route::post('/login', [LoginController::class, 'process'])
     ->name('login.process');
 
-// ==============================
-// ROUTE LOGOUT
-// ==============================
-
-// Proses logout user
-// Method POST demi keamanan (CSRF protected)
+// Proses logout (POST, aman dari CSRF)
 Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
 
-// ==============================
-// ROUTE DASHBOARD (PROTECTED)
-// ==============================
+/*
+|--------------------------------------------------------------------------
+| AUTH - REGISTER
+|--------------------------------------------------------------------------
+*/
+
+// Menampilkan halaman register (GET)
+Route::get('/register', [RegisterController::class, 'show'])
+    ->name('register');
+
+// Memproses data pendaftaran (POST)
+Route::post('/register', [RegisterController::class, 'store'])
+    ->name('register.store');
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD (PROTECTED)
+|--------------------------------------------------------------------------
+*/
 
 // Semua route di dalam group ini
-// hanya bisa diakses jika user sudah login
+// hanya bisa diakses oleh user yang SUDAH LOGIN
 Route::middleware('auth')->group(function () {
 
-    // Menampilkan halaman dashboard
+    // Halaman dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
