@@ -1,97 +1,99 @@
 <?php
-// Tag pembuka PHP, menandakan bahwa file ini berisi kode PHP
+// Tag pembuka PHP, menandakan file ini berisi kode PHP
 
 namespace App\Http\Controllers\Auth;
-// Namespace menunjukkan lokasi controller ini berada
-// Artinya: controller ini ada di folder app/Http/Controllers/Auth
-// Namespace dipakai agar tidak bentrok dengan class lain dan memudahkan autoloading
+// Namespace menunjukkan bahwa controller ini berada di folder:
+// app/Http/Controllers/Auth
+// Namespace membantu Laravel melakukan autoload class dengan benar
 
 use App\Http\Controllers\Controller;
-// Mengimpor class Controller bawaan Laravel
-// LoginController akan mewarisi (extends) fitur dari Controller ini
+// Mengimpor Controller bawaan Laravel
+// LoginController akan mewarisi fitur-fitur dasar controller
 
 use Illuminate\Http\Request;
 // Mengimpor class Request
-// Digunakan untuk mengambil data dari form (username, password, dll)
+// Digunakan untuk mengambil data dari form login
 
 use Illuminate\Support\Facades\Auth;
 // Mengimpor Facade Auth
-// Digunakan untuk proses autentikasi (login, logout, cek user)
+// Digunakan untuk autentikasi (login, logout, cek user)
 
 class LoginController extends Controller
-// Membuat class LoginController
-// extends Controller artinya LoginController adalah turunan dari Controller Laravel
+// Mendefinisikan class LoginController
 {
+    /**
+     * Menampilkan halaman login
+     */
     public function show()
     {
-        // Method ini bertugas menampilkan halaman login
-
+        // Mengembalikan view login
+        // File: resources/views/auth/login.blade.php
         return view('auth.login');
-        // Mengembalikan (menampilkan) file:
-        // resources/views/auth/login.blade.php
     }
 
+    /**
+     * Memproses login (username ATAU email)
+     */
     public function process(Request $request)
     {
-        // Method ini menangani proses login
-        // Parameter Request $request berisi data dari form login
-
+        // Validasi input dari form login
         $request->validate([
-            // Validasi input dari form
-
-            'username' => 'required',
-            // Field username wajib diisi
+            'login' => 'required|string',
+            // Field login wajib diisi
+            // Bisa berupa username atau email
 
             'password' => 'required',
-            // Field password wajib diisi
+            // Password wajib diisi
         ]);
 
-        if (Auth::attempt([
-            // Auth::attempt mencoba mencocokkan data login ke database
+        // Menentukan apakah input adalah email atau username
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL)
+            ? 'email'
+            : 'username';
+        // Jika format email valid → pakai kolom email
+        // Jika bukan → dianggap username
 
-            'username' => $request->username,
-            // Mencocokkan kolom username di database
-            // dengan input username dari form
+        // Mencoba login ke database
+        if (Auth::attempt([
+            $loginType => $request->login,
+            // Mencocokkan input login ke kolom email atau username
 
             'password' => $request->password,
-            // Mencocokkan password (otomatis dicek dengan hash)
+            // Password akan otomatis dicek dengan hash oleh Laravel
         ])) {
-            // Jika username dan password BENAR
+            // Jika login BERHASIL
 
             $request->session()->regenerate();
             // Membuat ulang session ID
-            // Ini penting untuk keamanan (mencegah session hijacking)
+            // Penting untuk keamanan (mencegah session hijacking)
 
             return redirect()
-                ->route('login')
-                // Redirect kembali ke halaman login
-
-                ->with('login_success', true);
-                // Mengirim session flash bernama login_success
-                // Session ini dipakai untuk menampilkan popup "Login Berhasil"
+                ->route('dashboard');
+            // Redirect ke halaman dashboard setelah login berhasil
         }
 
-        return back()->with('error', 'Username atau password salah');
-        // Jika login GAGAL:
-        // Kembali ke halaman sebelumnya (login)
+        // Jika login GAGAL
+        return back()->with('error', 'Username/email atau password salah');
+        // Kembali ke halaman login
         // Sambil membawa pesan error
     }
 
+    /**
+     * Proses logout
+     */
     public function logout(Request $request)
     {
-        // Method ini menangani proses logout
-
         Auth::logout();
-        // Menghapus status login user (keluar dari sistem)
+        // Menghapus status autentikasi user
 
         $request->session()->invalidate();
-        // Menghapus semua data session
+        // Menghapus seluruh data session
 
         $request->session()->regenerateToken();
         // Membuat ulang CSRF token
         // Untuk mencegah serangan CSRF
 
-        return redirect('/login');
+        return redirect()->route('login');
         // Setelah logout, user diarahkan ke halaman login
     }
 }
