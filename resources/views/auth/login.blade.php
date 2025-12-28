@@ -62,7 +62,7 @@
                         {{-- Input Username / Email --}}
                         <div class="mb-3">
                             <label for="login" class="form-label small">
-                                Username/Email
+                                Username atau Email
                             </label>
 
                             <input
