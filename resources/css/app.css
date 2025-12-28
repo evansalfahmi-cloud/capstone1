@@ -1,0 +1,71 @@
+/* ================================
+   Bootstrap (HARUS PALING ATAS)
+   ================================ */
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+/* ================================
+   San Francisco Pro Display
+   ================================ */
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('/fonts/SF-Pro-Display-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('/fonts/SF-Pro-Display-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('/fonts/SF-Pro-Display-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ================================
+   Global Font
+   ================================ */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: 'SF Pro Display';
+}
+
+/* ================================
+   Background Image (FULL SCREEN)
+================================ */
+
+body {
+    position: relative;
+    min-height: 100vh;
+    background-color: #f8f9fa; /* fallback */
+}
+
+/* ================================
+   Background Image with OPACITY 0.08
+================================ */
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url('/img/bg.png');
+    background-size: cover;          /* satu gambar penuh */
+    background-position: center;     /* selalu tengah */
+    background-repeat: no-repeat;    /* TIDAK diulang */
+    opacity: 0.1;                   /* SESUAI PERMINTAAN */
+    z-index: -1;
+}
